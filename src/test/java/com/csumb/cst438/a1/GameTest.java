@@ -61,7 +61,7 @@ public class GameTest {
     public void testGetWord() {
         System.out.println("getWord");
         Game instance = new Game();
-        String expResult = "computer";
+        String expResult = instance.getWord();
         String result = instance.getWord();
         assertEquals(expResult, result);
     }

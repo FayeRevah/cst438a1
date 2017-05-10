@@ -61,8 +61,17 @@ public class MyHttpServer {
                                             + "<input type=\"submit\" value=\"Submit\">" + "</form></body></html>";
                                 } else {
                                     // continue with current game
-                                    char ch = uri.charAt(uri.length()-1);  // letter that user has guessed
-                                    int result = game.playGame(ch);
+                                    int result;
+                                    int index = uri.indexOf('=');
+                                    String requestString = uri.substring(index + 1).toLowerCase();
+                                    if(requestString.length() > 1 || requestString.length() == 0)//if user guesses >1 character or no character
+                                        result = 4;
+                                    else //user guesses only 1 character
+                                    {
+                                        char ch = requestString.charAt(0);  // letter that user has guessed
+                                        result = game.playGame(ch);
+                                    }
+                                    
                                     switch(result) {
                                         case 0: // good guess, continue game
                                             response = "<!DOCTYPE html><html><head><title>MyHttpServer</title></head><body><h2>Hangman</h2>"
@@ -93,6 +102,14 @@ public class MyHttpServer {
                                             + "</body></html>";
                                              cookie="0";
                                              break;
+                                        case 4:
+                                            response = "<!DOCTYPE html><html><head><title>MyHttpServer</title></head><body><h2>Hangman</h2>"
+                                            + "<img src=\"" + "h" + game.getState() + ".gif" + "\">"
+                                            + "<h2 style=\"font-family:'Lucida Console', monospace\"> " + game.getDisplayWord() + "</h2>"
+                                            + "<form action=\"/\" method=\"get\"> "
+                                            + "Guess a character <input type=\"text\" name=\"guess\"><br>"
+                                            + "<input type=\"submit\" value=\"Submit\">" + "</form></body></html>" + "<h3>You must enter 1 alphabetic character</h3>";
+                                            break;
                                     }
                                     
                                 }
