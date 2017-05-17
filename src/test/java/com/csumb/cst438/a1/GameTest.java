@@ -73,13 +73,29 @@ public class GameTest {
     public void testGetDisplayWord() {
         System.out.println("getDisplayWord");
         Game instance = new Game();
-        String expResult = "_ _ _ _ _ _ _ _";
+        instance.startNewGame();
+        
+        String word = instance.getWord();
+        String expResult = "";
+        
+        for(int i = 0; i < word.length(); i++){
+            expResult += "_";
+            if(!(i == word.length() - 1))
+                expResult += " ";
+        }
+        
+        //System.out.println("ExpResult: " + expResult + ":" + word + "\n");
+        //guess first character, play it, and update displayWord
         String result = instance.getDisplayWord();
         assertEquals(expResult, result);
-        instance.playGame('r');
+        instance.playGame(word.charAt(0));
         result = instance.getDisplayWord();
-        assertEquals("_ _ _ _ _ _ _ r", result);
-
+        
+        //String should guess the first character and fill it in
+        char firstChar = word.charAt(0);
+        String afterOneGuess = firstChar + expResult.substring(1);
+        //System.out.println("After one guess: " + afterOneGuess);
+        assertEquals(afterOneGuess, result);
     }
 
     /**
@@ -95,7 +111,6 @@ public class GameTest {
         instance.startNewGame();
         int result = instance.getState();
         assertEquals(1,result);
- 
     }
 
     /**
@@ -106,41 +121,30 @@ public class GameTest {
     @org.junit.Test
     public void testPlayGame() {
         System.out.println("playGame");
-        char guess = 'c';
         Game instance = new Game();
-        int expResult = 0;
-        int result = instance.playGame(guess);
-        assertEquals(expResult, result);
-        result = instance.playGame('d');
-        assertEquals(2, result);
-        result = instance.playGame('f');
-        assertEquals(2, result);
-        result = instance.playGame('g');
-        assertEquals(2, result);
-        result = instance.playGame('h');
-        assertEquals(2,result);
-        result = instance.playGame('j');
-        assertEquals(2,result);
-        result = instance.playGame('k');
-        assertEquals(3,result);
- 
         instance.startNewGame();
-        result = instance.playGame('c');
-        assertEquals(0,result);
-        result = instance.playGame('o');
-        assertEquals(0,result);
-        result = instance.playGame('m');
-        assertEquals(0,result);
-        result = instance.playGame('p');
-        assertEquals(0,result);
-        result = instance.playGame('u');
-        assertEquals(0,result);
-        result = instance.playGame('t');
-        assertEquals(0,result);
-        result = instance.playGame('e');
-        assertEquals(0,result);
-        result = instance.playGame('r');
-        assertEquals(1,result);
+        
+        int expResult = 0;
+        String word = instance.getWord();
+        char guess;
+        int result;
+       
+        //testing correct results of all characters other than the last
+        //result = 0 (good guess, continue game)
+        for(int i = 0; i < word.length() - 1; i++)
+        {
+            guess = word.charAt(i);
+            result = instance.playGame(guess);
+            //System.out.println("GUESS: " + guess + "\n");
+            assertEquals(0, result);
+        }
+        
+        //testing final character, win game
+        //result = 1 (good guess, win game)
+        char lastChar = word.charAt(word.length() - 1);
+        result = instance.playGame(lastChar);
+        assertEquals(1, result);
+        
     }
     
 }

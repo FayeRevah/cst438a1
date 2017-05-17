@@ -29,11 +29,12 @@ public class Game {
     private ArrayList<String> wordlist;  // list of words
     
     public Game() {
-        generator = new Random();
-        word=randomWord();
+        
+        word= "computer";
         createDisplayWord();
         state=1;
         wordlist=null;
+        generator = new Random();
         
     }
     
@@ -66,8 +67,7 @@ public class Game {
     public int playGame(char guess) {
             boolean correctGuess = updateDisplayWord(guess);
             if (correctGuess==false) {
-                if(guess == '+' || !Character.isLetter(guess))
-                    return 4;
+
                 state++;
                 if (state==7) {
                     // user has lost game
