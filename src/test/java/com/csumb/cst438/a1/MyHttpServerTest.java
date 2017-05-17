@@ -45,8 +45,9 @@ public class MyHttpServerTest {
      * Test of main method, of class MyHttpServer.
      */
     @Test
-    public void testHandle() {
-       /* String expectedBody = "<!DOCTYPE html><html><head><title>MyHttpServer</title></head>" + 
+    public void testHandle() throws Exception{
+        /*
+        String expectedBody = "<!DOCTYPE html><html><head><title>MyHttpServer</title></head>" + 
                 "<body><h2>Hangman</h2><img src=\"h1.gif\"><h2 style=\"font-family:'Lucida Console', monospace\">" +
                 " _ _ _ _ _ _ _ _</h2><form action=\"/\" method=\"get\"> Guess a character <input type=\"text\" name=\"guess\"><br>" +
                 "<input type=\"submit\" value=\"Submit\"></form></body></html>";
@@ -68,6 +69,26 @@ public class MyHttpServerTest {
     } catch (Exception e) {
         fail("unexpected exception in testHandle "+e.getMessage());
     }*/
+        Headers header = new Headers();
+        System.out.println("Entered!!!");
+        TestHttpExchange t = new TestHttpExchange("/h1.gif", header);
+        MyHttpServer.MyHandler handler = new MyHttpServer.MyHandler();
+        
+        handler.handle(t);
+        // check response for expect output
+        Headers response = t.getResponseHeaders();
+        assertEquals("Bad content type", "image/gif", response.getFirst("Content-type"));
+        assertEquals("Bad response code.", 200, t.getResponseCode());
+        // check that length of response body is 8581 bytes. 
+        assertEquals("Bad response length.", "8581", response.getFirst("Content-length"));
+        
+        //testing inaccessible file
+        TestHttpExchange t1 = new TestHttpExchange("/h0.gif", header);
+        handler.handle(t1);
+        response = t1.getResponseHeaders();
+        //System.out.println("RC: " + t1.getResponseCode());
+        assertEquals("Bad response code.", 0, t1.getResponseCode());
     }
+    
     
 }

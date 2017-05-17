@@ -131,6 +131,7 @@ public class GameTest {
        
         //testing correct results of all characters other than the last
         //result = 0 (good guess, continue game)
+        //System.out.println(word + "\n");
         for(int i = 0; i < word.length() - 1; i++)
         {
             guess = word.charAt(i);
@@ -145,6 +146,28 @@ public class GameTest {
         result = instance.playGame(lastChar);
         assertEquals(1, result);
         
+        //testing bad characters
+        //result = 2 (bad guess, continue game)
+        instance.startNewGame();
+        word=instance.getWord();
+        char errorChar = 'a';
+        
+        for(char c = 'a'; c <= 'z'; c++)
+            if(word.indexOf(c) < 0){
+               errorChar = c;
+               break;
+            }
+        
+        for(int i = 0; i < 5; i++)
+        {
+            result = instance.playGame(errorChar);
+            assertEquals(2, result);
+            //System.out.println("Error: " + word + ": " +result + " " + errorChar + "\n");
+        }
+        
+        //lost game, 6 errors reached
+        result = instance.playGame(errorChar);
+        assertEquals(3, result);
     }
     
 }
