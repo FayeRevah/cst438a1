@@ -65,6 +65,7 @@ public class Game {
      *        3 = bad guess.  Lost game.
      */
     public int playGame(char guess) {
+            guess = Character.toLowerCase(guess);
             boolean correctGuess = updateDisplayWord(guess);
             if (correctGuess==false) {
 
